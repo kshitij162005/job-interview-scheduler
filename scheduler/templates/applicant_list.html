@@ -1,22 +1,32 @@
-<!DOCTYPE html>
-<html>
-<head><title>Applicants</title></head>
-<body>
-    <h1>List of Applicants</h1>
-    <table>
-        <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Job Applied For</th>
-        </tr>
-        {% for applicant in applicants %}
-        <tr>
-            <td>{{ applicant.name }}</td>
-            <td>{{ applicant.email }}</td>
-            <td>{{ applicant.job_applied_for }}</td>
-        </tr>
-        {% endfor %}
+{% extends "base.html" %}
+
+{% block title %}Applicants{% endblock %}
+
+{% block content %}
+    <h1 class="text-2xl font-bold mb-4">List of Applicants</h1>
+    <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+        <thead class="bg-gray-200">
+            <tr>
+                <th class="py-2 px-4 text-left">Name</th>
+                <th class="py-2 px-4 text-left">Email</th>
+                <th class="py-2 px-4 text-left">Job Applied For</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for applicant in applicants %}
+            <tr class="border-t">
+                <td class="py-2 px-4">{{ applicant.name }}</td>
+                <td class="py-2 px-4">{{ applicant.email }}</td>
+                <td class="py-2 px-4">{{ applicant.job_applied_for }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3" class="py-4 px-4 text-center text-gray-500">No applicants found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
-    <p><a href="{% url 'add_applicant' %}">Add New Applicant</a></p>
-</body>
-</html>
+    <div class="mt-4">
+        <a href="{% url 'add_applicant' %}" class="text-blue-500 hover:underline">Add New Applicant</a>
+    </div>
+{% endblock %}

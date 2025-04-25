@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="min-h-screen flex flex-col justify-center items-center bg-gray-100 text-center px-4">
+    <h1 class="text-5xl font-bold text-[#0FA4AF] mb-10">Welcome to the Job Interview Scheduler</h1>
+    <div class="space-y-4 w-full max-w-xs">
+        <a href="{% url 'applicant_list' %}" class="block text-xl text-white bg-blue-500 px-6 py-3 rounded shadow hover:bg-blue-600 transition duration-200">
+            View Applicants
+        </a>
+        <a href="{% url 'assignment_list' %}" class="block text-xl text-white bg-green-500 px-6 py-3 rounded shadow hover:bg-green-600 transition duration-200">
+            View Assignments
+        </a>
+        <a href="{% url 'add_applicant' %}" class="block text-xl text-white bg-purple-500 px-6 py-3 rounded shadow hover:bg-purple-600 transition duration-200">
+            Add New Applicant
+        </a>
+        <a href="{% url 'assign_interview' %}" class="block text-xl text-white bg-indigo-500 px-6 py-3 rounded shadow hover:bg-indigo-600 transition duration-200">
+            Assign Interview
+        </a>
+    </div>
+</div>
+{% endblock %}
