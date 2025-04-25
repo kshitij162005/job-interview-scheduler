@@ -1,100 +1,61 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Assignments</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-        }
+{% extends "base.html" %}
 
-        h2 {
-            color: #0FA4AF;
-        }
+{% block title %}Interview Assignments{% endblock %}
 
-        form {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
+{% block content %}
+    <h2 class="text-2xl font-bold text-[#0FA4AF] mb-4">Interview Assignments</h2>
 
-        input, select, button {
-            padding: 6px 10px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-        }
+    <form method="get" class="flex flex-wrap gap-4 mb-6">
+        <div>
+            <label class="block mb-1 font-medium">Status:</label>
+            <select name="status" class="p-2 border rounded">
+                <option value="">All</option>
+                {% for key, label in statuses %}
+                    <option value="{{ key }}" {% if key == selected_status %}selected{% endif %}>
+                        {{ label }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
 
-        button {
-            background-color: #0FA4AF;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
+        <div>
+            <label class="block mb-1 font-medium">Date:</label>
+            <input type="date" name="date" value="{{ selected_date }}" class="p-2 border rounded">
+        </div>
 
-        button:hover {
-            background-color: #024950;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            border: 1px solid #ccc;
-            padding: 8px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #AFDDE5;
-        }
-
-        a {
-            display: inline-block;
-            margin-top: 20px;
-            text-decoration: none;
-            background-color: #964734;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 5px;
-        }
-
-        a:hover {
-            background-color: #AFDDE5;
-            color: black;
-        }
-    </style>
-</head>
-<body>
-    <h2>Interview Assignments</h2>
-
-    <form method="get">
-        <input type="text" name="applicant" placeholder="Applicant Name" value="{{ filters.applicant }}">
-        <select name="status">
-            <option value="">All Statuses</option>
-            <option value="Scheduled" {% if filters.status == 'Scheduled' %}selected{% endif %}>Scheduled</option>
-            <option value="Completed" {% if filters.status == 'Completed' %}selected{% endif %}>Completed</option>
-        </select>
-        <input type="text" name="job_role" placeholder="Job Role" value="{{ filters.job_role }}">
-        <button type="submit">Filter</button>
+        <div class="self-end">
+            <button type="submit" class="bg-[#0FA4AF] hover:bg-[#024950] text-white px-4 py-2 rounded">
+                Filter
+            </button>
+        </div>
     </form>
 
-    <table>
-        <tr>
-            <th>Applicant</th>
-            <th>Slot</th>
-            <th>Status</th>
-        </tr>
-        {% for a in assignments %}
-        <tr>
-            <td>{{ a.applicant.name }}</td>
-            <td>{{ a.interview_slot.date }} {{ a.interview_slot.time }} with {{ a.interview_slot.interviewer_name }} ({{ a.interview_slot.job_role }})</td>
-            <td>{{ a.interview_slot.status }}</td>
-        </tr>
-        {% endfor %}
+    <table class="w-full border-collapse mb-6">
+        <thead>
+            <tr class="bg-[#AFDDE5]">
+                <th class="border px-4 py-2 text-left">Applicant</th>
+                <th class="border px-4 py-2 text-left">Slot</th>
+                <th class="border px-4 py-2 text-left">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for a in assignments %}
+                <tr>
+                    <td class="border px-4 py-2">{{ a.applicant.name }}</td>
+                    <td class="border px-4 py-2">
+                        {{ a.interview_slot.date }} {{ a.interview_slot.time }} with {{ a.interview_slot.interviewer_name }} ({{ a.interview_slot.job_role }})
+                    </td>
+                    <td class="border px-4 py-2">{{ a.interview_slot.status }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="3" class="border px-4 py-2 text-center text-gray-500">No assignments found.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
     </table>
 
-    <a href="{% url 'assign_interview' %}">Assign Another</a>
-</body>
-</html>
+    <a href="{% url 'assign_interview' %}" class="inline-block bg-[#964734] hover:bg-[#AFDDE5] hover:text-black text-white px-4 py-2 rounded">
+        Assign Another
+    </a>
+{% endblock %}

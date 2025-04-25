@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import Applicant, InterviewSlot, Assignment
 from .forms import AssignmentForm, ApplicantForm
+from django.db.models import Q
+from datetime import datetime
 
 
 def add_applicant(request):
@@ -26,7 +28,6 @@ def assign_interview(request):
             interview_slot = form.cleaned_data['interview_slot']
             applicant = form.cleaned_data['applicant']
             
-            # Check if the interview slot is already assigned
             if Assignment.objects.filter(interview_slot=interview_slot).exists():
                 messages.error(request, 'This interview slot is already assigned to another applicant.')
                 return redirect('assign_interview')  
@@ -42,29 +43,28 @@ def assign_interview(request):
 
 
 def assignment_list(request):
+    status_filter = request.GET.get('status')
+    date_filter = request.GET.get('date')
+
     assignments = Assignment.objects.select_related('applicant', 'interview_slot')
-    
-    # Filters
-    applicant_name = request.GET.get('applicant')
-    status = request.GET.get('status')
-    job_role = request.GET.get('job_role')
 
-    if applicant_name:
-        assignments = assignments.filter(applicant__name__icontains=applicant_name)
-    if status:
-        assignments = assignments.filter(interview_slot__status=status)
-    if job_role:
-        assignments = assignments.filter(interview_slot__job_role__icontains=job_role)
+    if status_filter:
+        assignments = assignments.filter(interview_slot__status=status_filter)
 
+    if date_filter:
+        try:
+            date_obj = datetime.strptime(date_filter, "%Y-%m-%d").date()
+            assignments = assignments.filter(interview_slot__date=date_obj)
+        except ValueError:
+            pass  # ignore invalid date format
+
+    statuses = InterviewSlot.STATUS_CHOICES
     return render(request, 'assignment_list.html', {
         'assignments': assignments,
-        'filters': {
-            'applicant': applicant_name or '',
-            'status': status or '',
-            'job_role': job_role or '',
-        }
+        'statuses': statuses,
+        'selected_status': status_filter,
+        'selected_date': date_filter,
     })
-
 
 
 def applicant_list(request):
@@ -78,9 +78,8 @@ def update_status(request, slot_id):
         interview_slot = InterviewSlot.objects.get(id=slot_id)
     except InterviewSlot.DoesNotExist:
         messages.error(request, "The requested interview slot does not exist.")
-        return redirect('assignment_list')  # Ensure this points to the correct URL name
+        return redirect('assignment_list')  
     
-    # Check if the new status is available in the choices
     if request.method == 'POST':
         new_status = request.POST.get('status')
 
@@ -91,6 +90,15 @@ def update_status(request, slot_id):
         else:
             messages.error(request, 'Invalid status.')
 
-        return redirect('assignment_list')  # Ensure this points to the correct URL name
+        return redirect('assignment_list') 
 
     return render(request, 'update_status.html', {'interview_slot': interview_slot})
+
+def assignments_view(request):
+    assignments = Assignment.objects.all()
+    return render(request, 'assignments.html', {'assignments': assignments})
+
+
+def home(request):
+    return render(request, 'home.html')
+

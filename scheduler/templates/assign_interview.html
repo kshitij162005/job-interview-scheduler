@@ -1,22 +1,25 @@
-<!DOCTYPE html>
-<html>
-<head><title>Assign Interview</title></head>
-<body>
-    <h1>Assign Interview</h1>
-    <form method="POST">
+{% extends "base.html" %}
+
+{% block title %}Assign Interview{% endblock %}
+
+{% block content %}
+    <h1 class="text-2xl font-bold mb-4">Assign Interview</h1>
+
+    <form method="POST" class="space-y-4">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Assign Interview</button>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Assign Interview</button>
     </form>
 
     {% if messages %}
-        <div>
+        <div class="mt-4 p-4 bg-green-100 text-green-700 rounded">
             {% for message in messages %}
                 <p>{{ message }}</p>
             {% endfor %}
         </div>
     {% endif %}
 
-    <p><a href="{% url 'assignment_list' %}">Back to Assignments</a></p>
-</body>
-</html>
+    <div class="mt-4">
+        <a href="{% url 'assignment_list' %}" class="text-blue-500 hover:underline">Back to Assignments</a>
+    </div>
+{% endblock %}
