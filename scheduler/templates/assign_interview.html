@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head><title>Assign Interview</title></head>
+<body>
+    <h1>Assign Interview</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Assign Interview</button>
+    </form>
+
+    {% if messages %}
+        <div>
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <p><a href="{% url 'assignment_list' %}">Back to Assignments</a></p>
+</body>
+</html>
