@@ -1,5 +1,10 @@
 from django import forms
-from .models import Applicant, InterviewSlot, Assignment
+from .models import Assignment, InterviewSlot, Applicant
+
+class ApplicantForm(forms.ModelForm):
+    class Meta:
+        model = Applicant
+        fields = ['name', 'email', 'job_applied_for']
 
 class ApplicantForm(forms.ModelForm):
     class Meta:
@@ -14,4 +19,4 @@ class InterviewSlotForm(forms.ModelForm):
 class AssignmentForm(forms.ModelForm):
     class Meta:
         model = Assignment
-        fields = '__all__'
+        fields = ['interview_slot', 'applicant']

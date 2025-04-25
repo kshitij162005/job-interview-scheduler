@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head><title>Assignments</title></head>
+<body>
+    <h2>Interview Assignments</h2>
+    <table border="1">
+        <tr>
+            <th>Applicant</th>
+            <th>Slot</th>
+            <th>Status</th>
+        </tr>
+        {% for a in assignments %}
+        <tr>
+            <td>{{ a.applicant.name }}</td>
+            <td>{{ a.interview_slot.date }} {{ a.interview_slot.time }} with {{ a.interview_slot.interviewer_name }}</td>
+            <td>{{ a.interview_slot.status }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="{% url 'assign_interview' %}">Assign Another</a>
+</body>
+</html>
